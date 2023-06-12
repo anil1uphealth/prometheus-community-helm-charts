@@ -3209,7 +3209,23 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs: 
+      - job_name: 'prometheus-nifi-exporter'
+        metrics_path: /metrics
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+              - nifi-metrics:9092
+ 
+      - job_name: 'prometheus-kafka-exporter'
+        metrics_path: /metrics
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+              - prometheus-community-kafka-prometheus-kafka-exporter:9308
+       
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
